@@ -1,5 +1,5 @@
 import { getAllDocuments, getDocumentBySlug } from '@/lib/documents';
-import { renderMarkdown } from '@/lib/markdown';
+import MarkdownContent from '@/components/MarkdownContent';
 import TagPill from '@/components/TagPill';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -23,7 +23,6 @@ export default async function DocPage({ params }: { params: Promise<{ slug: stri
   const doc = getDocumentBySlug(slugStr);
   if (!doc) notFound();
 
-  const html = renderMarkdown(doc.content);
   const allDocs = getAllDocuments();
   const relatedDocs = doc.related
     .map((r) => allDocs.find((d) => d.slug.endsWith(r)))
@@ -57,7 +56,7 @@ export default async function DocPage({ params }: { params: Promise<{ slug: stri
       </div>
 
       {/* Content */}
-      <article className="prose" dangerouslySetInnerHTML={{ __html: html }} />
+      <MarkdownContent content={doc.content} />
 
       {/* Related Documents */}
       {relatedDocs.length > 0 && (
